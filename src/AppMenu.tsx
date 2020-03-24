@@ -10,7 +10,7 @@ import IconBarChart from "@material-ui/icons/BarChart";
 import IconLibraryBooks from "@material-ui/icons/LibraryBooks";
 
 import AppMenuItem from "./AppMenuItem";
-import Item from "antd/lib/list/Item";
+// import Item from "antd/lib/list/Item";
 
 import "./css/AppMenu.css";
 

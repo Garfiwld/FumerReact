@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import { Table } from "antd";
-import "../css/screen.css";
+// import "../css/screen.css";
 import "antd/dist/antd.css";
 import math from "mathjs";
 import Plot from "react-plotly.js";
 
-import { Alert, Form } from "reactstrap";
+import { Alert, Form, button } from "react-bootstrap";
 
 var dataInTable = [];
 const columns = [
@@ -121,24 +121,22 @@ class Bisection extends Component {
     return (
       <div class="content">
         <div class="container-fluid">
-          <Alert color="primary">
-            <h1>Bisection Method</h1>
-          </Alert>
+          <Alert color="primary"></Alert>
+          <h1>Bisection Method</h1>
 
           <div class="card">
             <div class="card-body">
               <Form>
                 <div class="form-row" onChange={this.handleChange}>
                   <div class="form-group col-md-12">
-                    <label for="fx">
-                      {" "}
-                      <p className="text-primary">input Equal</p>
-                    </label>
+                    <label for="inputEqual">input Equal</label>
                     <input
                       type="text"
                       class="form-control"
-                      name="fx"
+                      id="inputEqual"
                       placeholder="e^(-x/4)*(2-x)-1"
+                      value="e^(-x/4)*(2-x)-1"
+                      required
                     />
                   </div>
                   <div class="form-group col-md-6">
@@ -168,6 +166,7 @@ class Bisection extends Component {
             </div>
             <div class="card-footer">
               <button
+                type="submit"
                 class="btn btn-primary btn-lg btn-block"
                 onClick={() =>
                   this.bisection(

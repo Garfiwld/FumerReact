@@ -5,11 +5,12 @@ import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Drawer from "@material-ui/core/Drawer";
 import Container from "@material-ui/core/Container";
-import Typography from "@material-ui/core/Typography";
+// import Typography from "@material-ui/core/Typography";
 
 import AppMenu from "./AppMenu";
 
 import BisectionMethod from "./01-ROOT-OF-EQUATION/Bisection-Method";
+import FalsePositionMethod from "./01-ROOT-OF-EQUATION/False_position";
 
 const App: React.FC = () => {
   const classes = useStyles();
@@ -30,6 +31,10 @@ const App: React.FC = () => {
             <Switch>
               <Route path="/" exact component={BisectionMethod} />
               <Route path="/Bisection-Method" component={BisectionMethod} />
+              <Route
+                path="/False-position-Method"
+                component={FalsePositionMethod}
+              />
             </Switch>
           </Container>
         </main>
@@ -38,7 +43,7 @@ const App: React.FC = () => {
   );
 };
 
-const drawerWidth = 300;
+const drawerWidth = 240;
 
 const useStyles = makeStyles(theme => ({
   root: {
