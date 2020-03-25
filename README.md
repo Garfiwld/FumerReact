@@ -1,6 +1,12 @@
 # FumerReact
 
-### Docker
+## Docker
+
+#### !!! System Requirements !!!
+
+#### Docker Ram > 3Gb.
+
+![Screenshot](./image/docker_ram_seting.PNG)
 
 ```
 docker build -t fumer-react .
