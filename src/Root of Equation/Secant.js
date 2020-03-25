@@ -1,162 +1,199 @@
 import React, { Component } from 'react'
-import {Card, Input, Button, Table} from 'antd';
+import { Table } from 'antd';
 import '../screen.css';
 import 'antd/dist/antd.css';
 import math from 'mathjs';
 import Plot from 'react-plotly.js';
 
-const InputStyle = {
-    background: "#1890ff",
-    color: "white", 
-    fontWeight: "bold", 
-    fontSize: "24px"
-
-};
+// import { alert, form } from 'reactstrap';
 var dataInTable = []
 const columns = [
     {
-      title: "Iteration",
-      dataIndex: "iteration",
-      key: "iteration"
+        title: "Iteration",
+        dataIndex: "iteration",
+        key: "iteration"
     },
     {
-        title: "Y",
-        dataIndex: "y",
-        key: "y"
+        title: "X",
+        dataIndex: "x",
+        key: "x"
     },
     {
-      title: "Error",
-      key: "error",
-      dataIndex: "error"
+        title: "Error",
+        key: "error",
+        dataIndex: "error"
     }
-  ];
-  const xValues = math.range(-10, 10, 0.5).toArray();
-  var fx = " ";
+];
+const xValues = math.range(-10, 10, 0.5).toArray();
+var fx = " ";
 class Secant extends Component {
-    
+
     constructor() {
         super();
         this.state = {
-            fx: "",
-            x0: 0,
-            x1: 0,
-            showOutputCard: false,
+            fx: "e^x*sin(x)-1",
+            x0: 0.5,
+            x1: 0.6,
+            x2: 0,
+            err: 0.0001,
+
+            data: [],
+
             showGraph: false
         }
-        this.handleChange = this.handleChange.bind(this);
-        this.secant = this.secant.bind(this);
+        //this.handleChange = this.handleChange.bind(this);
+        //this.secant = this.secant.bind(this);
     }
-    secant(x0, x1) {
-        fx = this.state.fx;
-        var x = [], y=0, epsilon = parseFloat(0.000000);
-        var n=1, i=1;
-        var data  = []
-        data['y'] = []
-        data['error'] = []
-        x.push(x0);
-        x.push(x1);
-        data['y'][0] = x0;
-        data['error'][0] = "---";
+    secant = (x0, x1) => {
+        if (x0 > x1) {
+            window.alert("inputX0 < inputX1");
+        } else {
+            fx = this.state.fx;
+            var x = [], x2 = this.state.x2, epsilon = parseFloat(0.000000);
+            var n = 0, i = 1;
+            this.state.data['x'] = []
+            this.state.data['error'] = []
+            x.push(x0);
+            x.push(x1);
 
-        do{ 
-            y = x[i] - (this.func(x[i])*((x[i]-x[i-1])))/(this.func(x[i])-this.func(x[i-1]));
-            x.push(y);
-            epsilon = this.error(y,x[i]);
-            data['y'][n]   =   y.toFixed(8);
-            data['error'][n] =   Math.abs(epsilon).toFixed(8);
-            
-            n++;  
-            i++;
+            do {
+                x2 = x[i] - (this.func(x[i]) * ((x[i] - x[i - 1]))) / (this.func(x[i]) - this.func(x[i - 1]));
+                x.push(x2);
+                epsilon = this.error(x2, x[i]);
+                this.state.data['x'][n] = x2.toFixed(8);
+                this.state.data['error'][n] = Math.abs(epsilon * 100).toFixed(8);
 
-        }while(Math.abs(epsilon)>0.000001);
-        this.createTable(data['y'], data['error']);
-        this.setState({
-            showOutputCard: true,
-            showGraph: true
-        })
+                n++;
+                i++;
 
-        
+            } while (Math.abs(epsilon) > this.state.err);
+            this.state.x2 = x2
+            this.createTable(this.state.data['x'], this.state.data['error']);
+            this.setState({
+                showGraph: true
+            })
+
+        }
+
     }
-    func(X) {
+    func = (X) => {
         var expr = math.compile(this.state.fx);
-        let scope = {x:parseFloat(X)};
-        return expr.eval(scope);        
+        let scope = { x: parseFloat(X) };
+        return expr.eval(scope);
     }
-    error(xnew, xold) {
-        return Math.abs((xnew-xold) / xnew);
+    error = (xnew, xold) => {
+        return Math.abs((xnew - xold) / xnew);
     }
-    createTable(y, error) {
+    createTable = (x, error) => {
         dataInTable = []
-        for (var i=0 ; i<y.length ; i++) {
+        for (var i = 0; i < x.length; i++) {
             dataInTable.push({
-                iteration: i+1,
-                y: y[i],
+                iteration: i + 1,
+                x: x[i],
                 error: error[i]
             });
         }
-    
+
     }
-    handleChange(event) {
+    handleChange = (event) => {
         this.setState({
             [event.target.name]: event.target.value
         });
     }
     render() {
-        return(
-            <div style={{ background: "#FFFF", padding: "30px" }}>
-                <h2 style={{color: "black", fontWeight: "bold"}}>Secant Method</h2>
-                <div>
-                    <Card
-                    bordered={true}
-                    style={{ width: 300, background: "#001529", color: "#FFFFFFFF", float:"left"}}
-                    onChange={this.handleChange}
-                    >
-                        <h2>f(x)</h2><Input size="large" name="fx" style={InputStyle}></Input>
-                        <h2>X<sub>0</sub></h2><Input size="large" name="x0" style={InputStyle}></Input>
-                        <h2>X<sub>1</sub></h2><Input size="large" name="x1" style={InputStyle}></Input><br/><br/>
-                        <Button id="submit_button" onClick= {
-                                ()=>this.secant(parseFloat(this.state.x0), parseFloat(this.state.x1))
-                            }  
-                        style={{background: "#4caf50", color: "white", fontSize: "20px"}}>Submit</Button>
-                        
-                    </Card>
+        return (
+            <div class="content">
+                <div class="container-fluid">
+
+                    <alert color="primary"><h1>Secant Method</h1></alert>
+
+                    <div class="card">
+                        <div class="card-body">
+                            <form>
+                                <div class="form-row" onChange={this.handleChange}>
+
+
+                                    <div class="form-group col-md-12">
+                                        <label for="fx"> <p className="text-primary">input Equal</p></label>
+                                        <input type="text" class="form-control" name="fx" placeholder="e^x*sin(x)-1" value={this.state.fx} />
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="x0"><p className="text-primary">INITIAL NUMBER1 (X0))</p></label>
+                                        <input type="text" class="form-control" name="x0" placeholder="0.5" value={this.state.x0} />
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="x1"><p className="text-primary">INITIAL NUMBER2 (X1)</p></label>
+                                        <input type="text" class="form-control" name="x1" placeholder="0.6" value={this.state.x1} />
+                                    </div>
+
+
+                                </div>
+                            </form>
+                        </div>
+                        <div class="card-footer">
+                            <button class="btn btn-primary btn-lg btn-block" onClick={
+                                () => this.secant(parseFloat(this.state.x0), parseFloat(this.state.x1))
+                            }>ENTER</button>
+                        </div>
+                    </div>
+
+
+                    <br />
+
                     {this.state.showGraph &&
-                        <Card
-                        title={"Graph"}
-                        bordered={true}
-                        style={{ width: 500,height: "75vmin",  border:"2px solid black", background: "#f44aaa6", color: "#FFFFFFFF", float:"left"}}
-                        >
-                            <Plot
-                                data={[
-                                {
-                                    x: math.range(-10, 10, 0.5).toArray(),
-                                    y: xValues.map(function (x) {
-                                        return math.compile(fx).eval({x: x})
-                                    }),
-                                    type: 'scatter',
-                                    marker: {color: 'red'},
-                                },
-                                ]}
-                                layout={ {title: 'A Fancy Plot'} }
-                                
-                                style={{width: "100%"}}
-                            />  
-                        </Card>                        
+                        <div class="card">
+                            <div class="card-body">
+                                <Plot
+                                    data={[
+                                        {
+                                            x: math.range(-10, 10, 0.5).toArray(),
+                                            y: xValues.map(function (x) {
+                                                return math.compile(fx).eval({ x: x })
+                                            }),
+                                            name: "Exact",
+                                            type: 'scatter',
+                                            marker: { color: 'red' },
+                                        },
+                                        /*{
+                                            x: this.state.data['x'],
+                                            y: 0,
+                                            name: "Iteration",
+                                            mode: 'markers',
+                                            type: 'scatter',
+                                            marker: {color: 'blue'},
+                                        },*/
+                                        {
+                                            x: [this.state.x2],
+                                            y: 0,
+                                            name: "Appoximate",
+                                            type: 'scatter',
+                                            mode: 'markers',
+                                            marker: { color: 'orange', size: 12 },
+                                        },
+                                    ]}
+                                    layout={{ title: 'Secant Method' }}
+
+                                    style={{ width: "100%", float: "left", height: "370px" }}
+                                />
+                            </div>
+                        </div>
                     }
-                    {this.state.showOutputCard && 
-                        <Card
-                        title={"Output"}
-                        bordered={true}
-                        style={{width: "100%", background: "#2196f3", color: "#FFFFFFFF", float:"inline-start", marginBlockStart:"2%"}}
-                        id="outputCard"
-                        >
-                            <Table columns={columns} dataSource={dataInTable} bodyStyle={{fontWeight: "bold", fontSize: "18px", color: "black"}}
-                            ></Table>
-                        </Card>
-                    }                    
+
+
+                    <br />
+
+                    {this.state.showGraph &&
+                        <div class="card">
+                            <div class="card-body">
+                                <Table bordered={true} bodyStyle={{ fontWeight: "bold", fontSize: "18px", color: "black", backgroundColor: "white" }} columns={columns} dataSource={dataInTable}>
+                                </Table>
+
+                            </div>
+                        </div>
+                    }
+
                 </div>
 
-                
             </div>
         );
     }

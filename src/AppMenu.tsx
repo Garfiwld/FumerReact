@@ -67,22 +67,22 @@ const appMenuItems = [
         name: "LU",
         link: "/LU"
       },
-      {
-        name: "Cholesky",
-        link: "/Cholesky"
-      },
-      {
-        name: "Jacobi",
-        link: "/Jacobi"
-      },
-      {
-        name: "Seidel",
-        link: "/Seidel"
-      },
-      {
-        name: "Gradient",
-        link: "/Gradient"
-      }
+      // {
+      //   name: "Cholesky",
+      //   link: "/Cholesky"
+      // },
+      // {
+      //   name: "Jacobi",
+      //   link: "/Jacobi"
+      // },
+      // {
+      //   name: "Seidel",
+      //   link: "/Seidel"
+      // },
+      // {
+      //   name: "Gradient",
+      //   link: "/Gradient"
+      // }
     ]
   },
   {
@@ -139,40 +139,40 @@ const appMenuItems = [
       }
     ]
   },
-  {
-    name: "Differentiation",
-    Icon: Filter6Icon,
-    items: [
-      {
-        name: "Forwardh",
-        link: "/Forwardh"
-      },
-      {
-        name: "ForwardH2",
-        link: "/ForwardH2"
-      },
-      {
-        name: "ForwardH2",
-        link: "/ForwardH2"
-      },
-      {
-        name: "Backwardh",
-        link: "/Backwardh"
-      },
-      {
-        name: "Backwardh2",
-        link: "/Backwardh2"
-      },
-      {
-        name: "Centralh",
-        link: "/Centralh"
-      },
-      {
-        name: "Centralh2",
-        link: "/Centralh2"
-      }
-    ]
-  },
+  // {
+  //   name: "Differentiation",
+  //   Icon: Filter6Icon,
+  //   items: [
+  //     {
+  //       name: "Forwardh",
+  //       link: "/Forwardh"
+  //     },
+  //     {
+  //       name: "ForwardH2",
+  //       link: "/ForwardH2"
+  //     },
+  //     {
+  //       name: "ForwardH2",
+  //       link: "/ForwardH2"
+  //     },
+  //     {
+  //       name: "Backwardh",
+  //       link: "/Backwardh"
+  //     },
+  //     {
+  //       name: "Backwardh2",
+  //       link: "/Backwardh2"
+  //     },
+  //     {
+  //       name: "Centralh",
+  //       link: "/Centralh"
+  //     },
+  //     {
+  //       name: "Centralh2",
+  //       link: "/Centralh2"
+  //     }
+  //   ]
+  // },
   {
     name: "ODE",
     Icon: Filter7Icon,
@@ -185,10 +185,10 @@ const appMenuItems = [
         name: "Heun",
         link: "/Heun"
       },
-      {
-        name: "Modified_Euler",
-        link: "/Modified_Euler"
-      }
+      // {
+      //   name: "Modified_Euler",
+      //   link: "/Modified_Euler"
+      // }
     ]
   },
 ];
@@ -220,7 +220,7 @@ const useStyles = makeStyles(theme =>
       width: drawerWidth
     },
     menuItemIcon: {
-      color: "#97c05c"
+      color: "#8080ff"
     }
   })
 );

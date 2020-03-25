@@ -111,7 +111,7 @@ const useStyles = makeStyles(theme => ({
     width: drawerWidth,
     paddingTop: theme.spacing(4),
     paddingBottom: theme.spacing(4),
-    background: "#535454",
+    background: "#94b530",
     color: "#fff"
   },
   content: {

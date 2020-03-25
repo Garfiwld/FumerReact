@@ -1,36 +1,29 @@
 import React, { Component } from 'react'
-import {Card, Input, Button} from 'antd';
+import { Input, Table } from 'antd';
 import '../screen.css';
 import 'antd/dist/antd.css';
-const InputStyle = {
-    background: "#1890ff",
-    color: "white", 
-    fontWeight: "bold", 
-    fontSize: "24px"
+import math from 'mathjs';
 
-};
+// import { alert } from 'reactstrap';
 
 
 var A = [], B = [], X, matrixA = [], matrixB = [], output = []
 class Gauss extends Component {
-    
+
     constructor() {
         super();
         this.state = {
-            row: 0,
-            column: 0,
-            showDimentionForm : true,
-            showDimentionButton: true,
-            showMatrixForm: false,
-            showMatrixButton: false,
-            showOutputCard: false
+            n: parseInt(3),
+            showMatrix: false,
+            showOutput: false
         }
-        this.handleChange = this.handleChange.bind(this);
-        this.gauss = this.gauss.bind(this);
-    
+        //this.handleChange = this.handleChange.bind(this);
+        //this.gauss = this.gauss.bind(this);
+
     }
 
-    gauss(n) {
+    gauss = (n) => {
+        output = []
         this.initMatrix()
         if (A[0][0] === 0) { //pivoting
             var tempRow = JSON.parse(JSON.stringify(A[0]));
@@ -41,152 +34,141 @@ class Gauss extends Component {
             B[1] = tempColumn;
         }
         //Forward eliminated
-        for(var k=0 ; k<n ; k++) {
-            for(var i=k+1 ; i<n ; i++) {
+        for (var k = 0; k < n; k++) {
+            for (var i = k + 1; i < n; i++) {
                 var factor = A[i][k] / A[k][k];
-                for (var j=k ; j<n ; j++) {
-                    A[i][j] = A[i][j] - factor*A[k][j];
+                for (var j = k; j < n; j++) {
+                    A[i][j] = A[i][j] - factor * A[k][j];
                 }
-                B[i] = B[i] - factor*B[k];
+                B[i] = B[i] - factor * B[k];
 
             }
         }
         //Backward Substitution
         X = new Array(n);
-        X[n-1] = B[n-1] / A[n-1][n-1]; //find Xn
-        for(i=n-2 ; i>=0 ; i--) { //find Xn-1 to X1
+        X[n - 1] = B[n - 1] / A[n - 1][n - 1]; //find Xn
+        for (i = n - 2; i >= 0; i--) { //find Xn-1 to X1
             var sum = B[i];
-            for (j=i+1 ; j<n ; j++) {
-                sum = sum - A[i][j]*X[j];
+            for (j = i + 1; j < n; j++) {
+                sum = sum - A[i][j] * X[j];
             }
-            X[i] = Math.round(sum / A[i][i]);
-        }    
-        for (i=0 ; i<n ; i++) {
-            output.push("x"+(i+1)+" = "+X[i]);
-            output.push(<br/>)
+            X[i] = sum / A[i][i];
+        }
+        for (i = 0; i < n; i++) {
+            output.push(<h2><p className="text-primary">X<sub>{i}</sub>=&nbsp;&nbsp;{X[i]}</p></h2>);
+            output.push(<br />)
         }
 
 
         this.setState({
-            showOutputCard: true
+            showOutput: true
         });
 
-      
+
     }
-    createMatrix(row, column) {
-        A = []
-        B = []
-        X = [] 
+    createMatrix = (n) => {
         matrixA = []
         matrixB = []
-        output = []
-        for (var i=1 ; i<=row ; i++) {
-            for (var j=1 ; j<=column ; j++) {
+        for (var i = 1; i <= n; i++) {
+            for (var j = 1; j <= n; j++) {
                 matrixA.push(<Input style={{
                     width: "18%",
-                    height: "50%", 
-                    backgroundColor:"#06d9a0", 
-                    marginInlineEnd: "5%", 
+                    height: "50%",
+                    backgroundColor: "#06d9a0",
+                    marginInlineEnd: "5%",
                     marginBlockEnd: "5%",
                     color: "white",
                     fontSize: "18px",
                     fontWeight: "bold"
-                }} 
-                id={"a"+i+""+j} key={"a"+i+""+j} placeholder={"a"+i+""+j} />)  
+                }}
+                    id={"a" + i + "" + j} key={"a" + i + "" + j} placeholder={"a" + i + "" + j} defaultValue={parseInt(math.random(10))} />)
             }
-            matrixA.push(<br/>)
+            matrixA.push(<br />)
             matrixB.push(<Input style={{
                 width: "18%",
-                height: "50%", 
-                backgroundColor:"black", 
-                marginInlineEnd: "5%", 
+                height: "50%",
+                backgroundColor: "black",
+                marginInlineEnd: "5%",
                 marginBlockEnd: "5%",
                 color: "white",
                 fontSize: "18px",
                 fontWeight: "bold"
-            }} 
-            id={"b"+i} key={"b"+i} placeholder={"b"+i} />)
-                
-            
+            }}
+                id={"b" + i} key={"b" + i} placeholder={"b" + i} defaultValue={parseInt(math.random(10))} />)
+            matrixB.push(<br />)
+
+
         }
 
         this.setState({
-            showDimentionForm: false,
-            showDimentionButton: false,
-            showMatrixForm: true,
-            showMatrixButton: true
+            showMatrix: true
         })
-        
+
 
     }
-    initMatrix() {
-        for(var i=0 ; i<this.state.row ; i++) {
+    initMatrix = () => {
+        A = []
+        B = []
+        X = []
+        for (var i = 0; i < this.state.n; i++) {
             A[i] = []
-            for(var j=0 ; j<this.state.column ; j++) {
-                A[i][j] = (parseFloat(document.getElementById("a"+(i+1)+""+(j+1)).value));
+            for (var j = 0; j < this.state.n; j++) {
+                A[i][j] = (parseFloat(document.getElementById("a" + (i + 1) + "" + (j + 1)).value));
             }
-            B.push(parseFloat(document.getElementById("b"+(i+1)).value));
+            B.push(parseFloat(document.getElementById("b" + (i + 1)).value));
         }
     }
 
-    handleChange(event) {
+    handleChange = (event) => {
         this.setState({
             [event.target.name]: event.target.value
         });
     }
     render() {
-        return(
-            <div style={{ background: "#FFFF", padding: "30px" }}>
-                <h2 style={{color: "black", fontWeight: "bold"}}>Gauss Elimination</h2>
-                <div>
-                    
-                    <Card
-                    bordered={true}
-                    style={{ width: 400, background: "#f44336", color: "#FFFFFFFF"}}
-                    onChange={this.handleChange}
-                    >
-                        {this.state.showMatrixForm && <div><h2>Matrix [A]</h2><br/>{matrixA}<h2>Vector [B]<br/></h2>{matrixB}</div>}
-                        
-                        {this.state.showDimentionForm && 
-                            <div>
-                                <h2>Row</h2><Input size="large" name="row" style={InputStyle}></Input>
-                                <h2>Column</h2><Input size="large" name="column" style={InputStyle}></Input>
-                            </div> 
-                        }
-                        <br></br>
-                        {this.state.showDimentionButton && 
-                            <Button id="dimention_button" onClick= {
-                                ()=>this.createMatrix(this.state.row, this.state.column)
-                                }  
-                                style={{background: "#4caf50", color: "white", fontSize: "20px"}}>
-                                Submit<br></br>
-                                </Button>
-                        }
-                        {this.state.showMatrixButton && 
-                            <Button 
-                                id="matrix_button"  
-                                style={{background: "blue", color: "white", fontSize: "20px"}}
-                                onClick={()=>this.gauss(this.state.row)}>
-                                Submit
-                            </Button>
-                        }
-                        
-                    </Card>
-                    
-                    {this.state.showOutputCard &&
-                        <Card
-                        title={"Output"}
-                        bordered={true}
-                        style={{ width: 400, background: "#3d683d", color: "#FFFFFFFF", float:"left"}}
-                        onChange={this.handleChange}  id="answerCard">
-                            <p style={{fontSize: "24px", fontWeight: "bold"}}>{output}</p>
-                        </Card>
+        return (
+            <div class="content">
+                <div class="container-fluid" onChange={this.handleChange}>
+                    <alert color="primary"><h1>Gauss's Elimination</h1></alert>
+                    <div class="card">
+                        <div class="card-body">
+                            <label for="n"><p className="text-primary">input 'n' Create table input</p></label>
+                            <input type="text" class="form-control" name="n" placeholder="3" value={this.state.n} />
+                        </div>
+
+                        <div class="card-footer">
+                            <button class="btn btn-primary btn-lg btn-block" onClick={
+                                () => this.createMatrix(parseInt(this.state.n))
+                            }>ENTER</button>
+                        </div>
+                    </div>
+
+                    <br />
+                    {this.state.showMatrix &&
+                        <div class="card">
+                            <div class="card-body">
+                                <div>
+                                    <label for="InputTable"><h2><p className="text-primary">Table Input</p></h2></label>
+
+                                    <div><h4><p className="text-primary">Matrix [A]</p></h4><br />{matrixA}<h4><p className="text-primary">Vector [B]</p><br /></h4>{matrixB}</div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <button class="btn btn-primary btn-lg btn-block" onClick={() => this.gauss(this.state.n)}>
+                                    ENTER</button>
+                            </div>
+                        </div>
+                    }
+                    <br />
+                    {this.state.showOutput &&
+                        <div class="card">
+                            <div class="card-body">
+                                <p style={{ fontSize: "24px", fontWeight: "bold" }}>{output}</p>
+
+                            </div>
+                        </div>
                     }
 
-                   
                 </div>
-
-                
             </div>
         );
     }

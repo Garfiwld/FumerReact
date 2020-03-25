@@ -87,8 +87,9 @@ const useStyles = makeStyles(theme =>
         },
       },
     },
+    // แก้สีไอคอน
     menuItemIcon: {
-      color: '#97c05c',
+      color: '#ff0066',
     },
   }),
 )
